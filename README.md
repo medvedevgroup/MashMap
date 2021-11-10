@@ -1,4 +1,5 @@
 MashMap, modified to always use window size 1
+=============================================
 
 ### Installation
 
