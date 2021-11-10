@@ -1,7 +1,8 @@
 /**
  * @file    filter.hpp
- * @brief   implments the routines to filter mappings
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   implements the routines to filter mappings
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef FILTER_MAP_HPP 

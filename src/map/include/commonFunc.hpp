@@ -1,6 +1,7 @@
 /**
  * @file    commonFunc.hpp
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef COMMON_FUNC_HPP 
@@ -27,7 +28,7 @@ namespace skch
    */
   namespace CommonFunc
   {
-    //seed for murmerhash
+    //seed for murmurhash
     const int seed = 42;
 
     /**
@@ -108,6 +109,11 @@ namespace skch
          */
         std::deque< std::pair<MinimizerInfo, offset_t> > Q;
 
+        std::cerr << "INFO, skch::CommonFunc::addMinimizers"
+                  << ", to insert minimizers"
+                  << " for sequence id = " << seqCounter
+                  << " length = " << len << "\n";
+
         makeUpperCase(seq, len);
 
         //Compute reverse complement of seq
@@ -150,12 +156,15 @@ namespace skch
               Q.pop_back();
 
             //Push currentKmer and position to back of the queue
-            //-1 indicates the dummy window # (will be updated later)
+            //0 indicates the dummy window # (will be updated later)
             Q.push_back( std::make_pair(
-                  MinimizerInfo{currentKmer, seqCounter, -1, currentStrand},
+                  MinimizerInfo{currentKmer, seqCounter, 0, currentStrand},
                   i)); 
 
             //Select the minimizer from Q and put into index
+            //nota bene: it would seem that the position of the minimizing kmer
+            //           would be more useful than the position of the window,
+            //           but the window position is what mashmap uses
             if(currentWindowId >= 0)
             {
               //We save the minimizer if we are seeing it for first time
@@ -170,9 +179,7 @@ namespace skch
           }
         }
 
-#ifdef DEBUG
-        std::cout << "INFO, skch::CommonFunc::addMinimizers, inserted minimizers for sequence id = " << seqCounter << "\n";
-#endif
+        std::cerr << "INFO, skch::CommonFunc::addMinimizers, inserted minimizers for sequence id = " << seqCounter << "\n";
 
         delete [] seqRev;
       }

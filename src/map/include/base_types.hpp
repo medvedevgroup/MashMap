@@ -1,7 +1,8 @@
 /**
  * @file    base_types.hpp
- * @brief   Critical type defintions for mapping algorithm
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   Critical type definitions for mapping algorithm
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef BASE_TYPES_MAP_HPP 

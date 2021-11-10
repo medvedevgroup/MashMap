@@ -1,7 +1,8 @@
 /**
  * @file    computeMap.hpp
- * @brief   implments the sequence mapping logic
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   implements the sequence mapping logic
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef SKETCH_MAP_HPP 
@@ -120,11 +121,12 @@ namespace skch
         for(const auto &fileName : param.querySequences)
         {
           //Open the file using kseq
-          gzFile fp = gzopen(fileName.c_str(), "r");
+          FILE *file = fopen(fileName.c_str(), "r");
+          gzFile fp = gzdopen(fileno(file), "r");
           kseq_t *seq = kseq_init(fp);
 
 #ifdef DEBUG
-          std::cout << "INFO, skch::Map::mapQuery, mapping reads in " << fileName << std::endl;
+          std::cerr << "INFO, skch::Map::mapQuery, mapping reads in " << fileName << std::endl;
 #endif
 
           //size of sequence
@@ -141,7 +143,7 @@ namespace skch
             {
 
 #ifdef DEBUG
-              std::cout << "WARNING, skch::Map::mapQuery, read is not long enough for mapping" << std::endl;
+              std::cerr << "WARNING, skch::Map::mapQuery, read is not long enough for mapping" << std::endl;
 #endif
 
               seqCounter++;
@@ -186,7 +188,7 @@ namespace skch
           reportReadMappings(allReadMappings, "", outstrm);
         }
 
-        std::cout << "INFO, skch::Map::mapQuery, [count of mapped reads, reads qualified for mapping, total input reads] = [" << totalReadsMapped << ", " << totalReadsPickedForMapping << ", " << seqCounter << "]" << std::endl;
+        std::cerr << "INFO, skch::Map::mapQuery, [count of mapped reads, reads qualified for mapping, total input reads] = [" << totalReadsMapped << ", " << totalReadsPickedForMapping << ", " << seqCounter << "]" << std::endl;
       }
 
       /**
@@ -201,6 +203,9 @@ namespace skch
 
         //save query sequence name
         output->qseqName = input->seqName;
+
+        std::cerr << "INFO, skch::computeMap::mapModule"
+                  << ", qseqName = " << output->qseqName<< "\n";
 
         if(! param.split)   
         {
@@ -372,9 +377,7 @@ namespace skch
 
           CommonFunc::addMinimizers(Q.minimizerTableQuery, Q.seq, Q.len, param.kmerSize, param.windowSize, param.alphabetSize, Q.seqCounter);
 
-#ifdef DEBUG
-          std::cout << "INFO, skch::Map:doL1Mapping, read id " << Q.seqCounter << ", minimizer count = " << Q.minimizerTableQuery.size() << "\n";
-#endif
+          std::cerr << "INFO, skch::Map:doL1Mapping, read id " << Q.seqCounter << ", minimizer count = " << Q.minimizerTableQuery.size() << "\n";
 
           ///2. Find the hits in the reference, pick 's' unique minimizers as seeds, 
 
@@ -385,6 +388,10 @@ namespace skch
 
           //This is the sketch size for estimating jaccard
           Q.sketchSize = std::distance(Q.minimizerTableQuery.begin(), uniqEndIter);
+
+#ifdef DEBUG
+          std::cerr << "INFO, skch::Map:doL1Mapping, Q.sketchSize =  " << Q.sketchSize << "\n";
+#endif
 
           //For invalid query (example : just NNNs), we may be left with 0 sketch size
           //Ignore the query in this case
@@ -416,7 +423,7 @@ namespace skch
           this->computeL1CandidateRegions(Q, seedHitsL1, minimumHits, l1Mappings);
 
 #ifdef DEBUG
-          std::cout << "INFO, skch::Map:doL1Mapping, read id " << Q.seqCounter << ", Count of L1 hits in the reference = " << seedHitsL1.size() << ", minimum hits required for a candidate = " << minimumHits << ", Count of L1 candidate regions = " << l1Mappings.size() << "\n";
+          std::cerr << "INFO, skch::Map:doL1Mapping, read id " << Q.seqCounter << ", Count of L1 hits in the reference = " << seedHitsL1.size() << ", minimum hits required for a candidate = " << minimumHits << ", Count of L1 candidate regions = " << l1Mappings.size() << "\n";
 #endif
 
         }
@@ -530,7 +537,7 @@ namespace skch
           }
 
 #ifdef DEBUG
-          std::cout << "INFO, skch::Map:doL2Mapping, read id " << Q.seqCounter << ", count of L1 candidates= " << l1Mappings.size() << ", count of L2 candidates= " << l2Mappings.size() << std::endl;
+          std::cerr << "INFO, skch::Map:doL2Mapping, read id " << Q.seqCounter << ", count of L1 candidates= " << l1Mappings.size() << ", count of L2 candidates= " << l2Mappings.size() << std::endl;
 #endif
         }
 

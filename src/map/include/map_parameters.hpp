@@ -1,6 +1,7 @@
 /**
  * @file    map_parameters.hpp
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef SKETCH_CONFIG_HPP 

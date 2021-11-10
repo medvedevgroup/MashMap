@@ -1,7 +1,8 @@
 /**
  * @file    slidingMap.hpp
  * @brief   implements ordered map to compute Jaccard
- * @author  Chirag Jain <cjain7@gatech.edu>
+ * @brief   Borrowed and modified code from MashMap (github.com/marbl/MashMap)
+ * @author  Bob Harris <rsharris@bx.psu.edu>
  */
 
 #ifndef SLIDING_MAP_HPP 
