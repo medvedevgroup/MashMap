@@ -3,7 +3,7 @@ MashMap, modified to always use window size 1
 
 ### Installation
 
-First, and *separately* clone the original MashMap from
+First, and *separately*, clone the original MashMap from
 https://github.com/marbl/MashMap and follow the instructions for installation
 there. As part of this, you will produce a Makefile suitable for your machine.
 
